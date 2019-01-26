@@ -1,9 +1,8 @@
-/*
-  === GameObject ===
-  * createdAt
-  * dimensions (These represent the character's size in the video game)
-  * destroy() // prototype method -> returns the string: 'Object was removed from the game.'
-*/
+// pause(seconds) allow for dramatic pauses in the text output of the battle.
+const pause = seconds => {
+  let now = Date.now();
+  while (Date.now() - now < seconds * 1000);
+};
 
 class GameObject {
   constructor(atts) {
@@ -11,17 +10,9 @@ class GameObject {
     this.dimensions = atts.dimensions;
   }
   destroy() {
-    return `${this.name} was removed from the game.`;
+    return `${this.name} was removed from the game.\n`;
   }
 }
-
-/*
-    === CharacterStats ===
-    * healthPoints
-    * name
-    * takeDamage() // prototype method -> returns the string '<object name> took damage.'
-    * should inherit destroy() from GameObject's prototype
-  */
 
 class CharacterStats extends GameObject {
   constructor(atts) {
@@ -33,16 +24,6 @@ class CharacterStats extends GameObject {
     return `${this.name} took damage.`;
   }
 }
-
-/*
-    === Humanoid (Having an appearance or character resembling that of a human.) ===
-    * team
-    * weapons
-    * language
-    * greet() // prototype method -> returns the string '<object name> offers a greeting in <object language>.'
-    * should inherit destroy() from GameObject through CharacterStats
-    * should inherit takeDamage() from CharacterStats
-  */
 
 class Humanoid extends CharacterStats {
   constructor(atts) {
@@ -59,12 +40,6 @@ class Humanoid extends CharacterStats {
     }.`;
   }
 }
-
-/*
- * Inheritance chain: GameObject -> CharacterStats -> Humanoid
- * Instances of Humanoid should have all of the same properties as CharacterStats and GameObject.
- * Instances of CharacterStats should have all of the same properties as GameObject.
- */
 
 const mage = new Humanoid({
   createdAt: new Date(),
@@ -108,21 +83,6 @@ const archer = new Humanoid({
   languages: ["Elvish", "Common Tongue"]
 });
 
-console.log(mage.createdAt); // Today's date
-console.log(archer.dimensions); // { length: 1, width: 2, height: 4 }
-console.log(swordsman.healthPoints); // 15
-console.log(mage.name); // Bruce
-console.log(swordsman.team); // The Round Table
-console.log(mage.weapons); // Staff of Shamalama
-console.log(archer.languages); // Elvish
-console.log(archer.greet()); // Lilith offers a greeting in Elvish.
-console.log(mage.takeDamage()); // Bruce took damage.
-console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-
-console.log("\n");
-
-// * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.
-
 class Villain extends Humanoid {
   constructor(atts) {
     super(atts);
@@ -130,7 +90,7 @@ class Villain extends Humanoid {
     this.secretWeapon = atts.secretWeapon;
   }
   speakTaunt() {
-    console.log(`${this.name}: ${this.taunt}`);
+    console.log(`${this.name}: ${this.taunt}\n`);
   }
 }
 
@@ -141,7 +101,7 @@ class Hero extends Humanoid {
     this.superWeapon = atts.superWeapon;
   }
   speakBattleCry() {
-    console.log(`${this.name}: ${this.battleCry}`);
+    console.log(`${this.name}: ${this.battleCry}\n`);
   }
 }
 
@@ -177,14 +137,6 @@ const glasowyn = new Hero({
   superWeapon: "Sword Before Time"
 });
 
-console.log(argoroth.greet());
-argoroth.speakTaunt();
-console.log(glasowyn.greet());
-glasowyn.speakBattleCry();
-
-console.log("\n");
-
-// * Give the Hero and Villains different methods that could be used to remove health points from objects which could result in destruction if health gets to 0 or drops below 0;
 Villain.prototype.normalAttack = function(target) {
   let damage = Math.floor(Math.random() * Math.floor(this.healthPoints / 3));
   let plural = "points";
@@ -192,16 +144,19 @@ Villain.prototype.normalAttack = function(target) {
     plural = "point";
   }
   target.healthPoints -= damage;
+  pause(2.5);
   console.log(
     `${this.name} hits ${target.name} with a ${
       this.weapons[Math.floor(Math.random() * Math.floor(this.weapons.length))]
     } for ${damage} health ${plural}!`
   );
+  pause(2);
   if (target.healthPoints <= 0) {
-    console.log(`${target.name} has sustained mortal damage!`);
+    console.log(`\n${target.name} has sustained mortal damage!\n`);
+    pause(3);
     console.log(target.destroy());
   } else {
-    console.log(`${target.name} lives to fight on!`);
+    console.log(`${target.name} lives to fight on!\n`);
   }
 };
 
@@ -212,16 +167,19 @@ Villain.prototype.specialAttack = function(target) {
     plural = "point";
   }
   target.healthPoints -= damage;
+  pause(2.5);
   console.log(
     `${this.name} hits ${target.name} with a ${
       this.secretWeapon
     } for ${damage} health ${plural}!`
   );
+  pause(2);
   if (target.healthPoints <= 0) {
-    console.log(`${target.name} has sustained mortal damage!`);
+    console.log(`\n${target.name} has sustained mortal damage!\n`);
+    pause(3);
     console.log(target.destroy());
   } else {
-    console.log(`${target.name} lives to fight on!`);
+    console.log(`${target.name} lives to fight on!\n`);
   }
 };
 
@@ -232,16 +190,19 @@ Hero.prototype.normalAttack = function(target) {
     plural = "point";
   }
   target.healthPoints -= damage;
+  pause(2.5);
   console.log(
     `${this.name} hits ${target.name} with a ${
       this.weapons[Math.floor(Math.random() * Math.floor(this.weapons.length))]
     } for ${damage} health ${plural}!`
   );
+  pause(2);
   if (target.healthPoints <= 0) {
-    console.log(`${target.name} has sustained mortal damage!`);
+    console.log(`\n${target.name} has sustained mortal damage!\n`);
+    pause(3);
     console.log(target.destroy());
   } else {
-    console.log(`${target.name} lives to fight on!`);
+    console.log(`${target.name} lives to fight on!\n`);
   }
 };
 
@@ -252,36 +213,38 @@ Hero.prototype.specialAttack = function(target) {
     plural = "point";
   }
   target.healthPoints -= damage;
+  pause(2.5);
   console.log(
     `${this.name} hits ${target.name} with a ${
       this.superWeapon
     } for ${damage} health ${plural}!`
   );
+  pause(2);
   if (target.healthPoints <= 0) {
-    console.log(`${target.name} has sustained mortal damage!`);
+    console.log(`\n${target.name} has sustained mortal damage!\n`);
+    pause(3);
     console.log(target.destroy());
   } else {
-    console.log(`${target.name} lives to fight on!`);
+    console.log(`${target.name} lives to fight on!\n`);
   }
 };
 
-glasowyn.normalAttack(argoroth);
-argoroth.specialAttack(mage);
-
-console.log("\n");
-
-// * Create two new objects, one a villain and one a hero and fight it out with methods!
-
 function epicBattle(hero, villain) {
+  pause(2);
   console.log(
-    `Here begins the epic battle between ${hero.name} and ${villain.name}!` +
-      "\n"
+    `Here begins the epic battle between ${hero.name} and ${villain.name}!\n`
   );
+  pause(3);
   console.log(
     `Will ${villain.name} prove victorious, or will ${hero.name}'s ${
       hero.superWeapon
-    } carry the day? Let's find out!` + "\n"
+    } carry the day? Let's find out!\n`
   );
+  pause(3);
+  villain.speakTaunt();
+  pause(3);
+  hero.speakBattleCry();
+  pause(3);
   let winner = "";
   while (!winner) {
     let attacker = "";
@@ -305,18 +268,21 @@ function epicBattle(hero, villain) {
     }
   }
   if (winner === hero) {
+    pause(3.5);
     console.log(
       `${hero.name} has defeated the mighty ${villain.name}! May ${
         hero.name
       } live in glory forever!`
     );
   } else {
+    pause(3.5);
     console.log(
       `Alas, ${villain.name} has slain the venerable ${hero.name}! ${
         villain.name
       }'s victory will be written in blood in the Evil Book!`
     );
   }
+  pause(4);
 }
 
 epicBattle(glasowyn, argoroth);
